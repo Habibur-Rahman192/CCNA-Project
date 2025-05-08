@@ -1,0 +1,320 @@
+!
+version 12.2(37)SE1
+service timestamps log datetime msec
+service timestamps debug datetime msec
+service password-encryption
+!
+hostname Core_SW02
+!
+!
+enable secret 5 $1$mERr$uOMJQ2KifpDVhgshEPjVU/
+!
+!
+!
+clock timezone GMT 0
+!
+!
+!
+ip routing
+!
+!
+!
+!
+username admin privilege 15 secret 5 $1$mERr$uOMJQ2KifpDVhgshEPjVU/
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip ssh version 2
+ip ssh time-out 30
+ip domain-name alphatech.local
+!
+!
+spanning-tree mode pvst
+spanning-tree portfast default
+spanning-tree vlan 1-1005 priority 28672
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/1
+ description Downlink to Access sw01
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport port-security maximum 2
+ spanning-tree portfast trunk
+ spanning-tree guard root
+!
+interface FastEthernet0/2
+ description Downlink to Access sw02
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ spanning-tree portfast trunk
+ spanning-tree guard root
+!
+interface FastEthernet0/3
+ description Downlink to Access sw03
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ spanning-tree portfast trunk
+ spanning-tree guard root
+!
+interface FastEthernet0/4
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/5
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/6
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/7
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/8
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/9
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/10
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/11
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/12
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/13
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/14
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/15
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/16
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/17
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/18
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/19
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/20
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/21
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/22
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/23
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface FastEthernet0/24
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky 
+ switchport port-security violation restrict 
+ shutdown
+!
+interface GigabitEthernet0/1
+ description link to Core_sw01
+!
+interface GigabitEthernet0/2
+ no switchport
+ ip address 10.10.0.5 255.255.255.0
+ duplex auto
+ speed auto
+!
+interface Vlan1
+ no ip address
+ shutdown
+!
+interface Vlan10
+ description IT_admin office
+ mac-address 0060.5ca2.4601
+ ip address 10.10.10.3 255.255.255.0
+ ip helper-address 10.10.60.5
+ standby 10 ip 10.10.10.1
+ standby 10 preempt
+!
+interface Vlan20
+ description Sales Team
+ mac-address 0060.5ca2.4602
+ ip address 10.10.20.3 255.255.255.0
+ ip helper-address 10.10.99.5
+ ip helper-address 10.10.60.5
+ standby 20 ip 10.10.20.1
+ standby 20 preempt
+!
+interface Vlan30
+ description Finance Team
+ mac-address 0060.5ca2.4603
+ ip address 10.10.30.3 255.255.255.0
+ ip helper-address 10.10.60.5
+ standby 30 ip 10.10.30.1
+ standby 30 preempt
+!
+interface Vlan40
+ description Guest
+ mac-address 0060.5ca2.4604
+ ip address 10.10.40.3 255.255.255.0
+ ip helper-address 10.10.60.5
+ ip access-group BLOCK-GUEST in
+ standby 40 ip 10.10.40.1
+ standby 40 preempt
+!
+interface Vlan60
+ description Server Farm
+ mac-address 0060.5ca2.4605
+ ip address 10.10.60.3 255.255.255.0
+ ip helper-address 10.10.60.5
+ standby 60 ip 10.10.60.1
+ standby 60 preempt
+!
+interface Vlan99
+ description IT Management
+ mac-address 0060.5ca2.4606
+ ip address 10.10.99.3 255.255.255.224
+ ip helper-address 10.10.60.5
+ ip access-group block-non-admin in
+ standby 99 ip 10.10.99.1
+ standby 99 preempt
+!
+router ospf 1
+ log-adjacency-changes
+ network 10.10.10.0 0.0.0.255 area 0
+ network 10.10.20.0 0.0.0.255 area 0
+ network 10.10.30.0 0.0.0.255 area 0
+ network 10.10.40.0 0.0.0.255 area 0
+ network 10.10.60.0 0.0.0.255 area 0
+ network 10.10.99.0 0.0.0.255 area 0
+ network 10.10.0.0 0.0.255.255 area 0
+!
+ip classless
+ip route 10.10.0.0 255.255.0.0 10.10.0.2 
+ip route 10.10.0.0 255.255.0.0 10.10.0.3 
+ip route 0.0.0.0 0.0.0.0 10.10.0.1 
+!
+ip flow-export destination 10.10.60.4 2055
+ip flow-export version 9
+!
+!
+ip access-list standard SSH-IT_ADMIN-ONLY
+ permit 10.10.99.0 0.0.0.255
+ deny any
+access-list 10 permit 10.10.10.0 0.0.0.255
+ip access-list extended BLOCK-GUEST
+ deny ip 10.10.40.0 0.0.0.255 10.10.0.0 0.0.0.255
+ permit ip 10.10.40.0 0.0.0.255 any
+ip access-list standard BLOCK-NON-ADMIN
+ deny 10.10.0.0 0.0.0.255
+ permit 10.10.10.0 0.0.0.255
+!
+banner login "!!! Authorised Users Only !!!"
+!
+!
+!
+!
+snmp-server community READ-ONLY RO
+snmp-server community WRITE-ONLY RW
+!
+logging trap debugging
+logging 10.10.60.4
+line con 0
+!
+line aux 0
+!
+line vty 0 4
+ access-class SSH-IT_ADMIN-ONLY in
+ exec-timeout 5 0
+ login local
+ transport input ssh
+line vty 5 15
+ access-class SSH-IT_ADMIN-ONLY in
+ exec-timeout 5 0
+ login local
+ transport input ssh
+!
+!
+!
+ntp server 10.10.60.4
+!
+end
+
