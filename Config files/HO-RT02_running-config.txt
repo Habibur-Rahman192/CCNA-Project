@@ -79,8 +79,10 @@ router ospf 1
  network 10.10.40.0 0.0.0.255 area 0
  network 10.10.99.0 0.0.0.255 area 0
  network 90.209.58.16 0.0.0.3 area 0
+ network 92.109.7.12 0.0.0.3 area 0
 !
 ip nat inside source list 1 interface GigabitEthernet0/0 overload
+ip nat inside source list GUEST-NET interface GigabitEthernet0/0 overload
 ip classless
 ip route 0.0.0.0 0.0.0.0 GigabitEthernet0/0 
 ip route 10.10.0.0 255.255.0.0 10.10.0.5 
@@ -90,6 +92,8 @@ ip flow-export version 9
 !
 access-list 10 permit 10.10.99.0 0.0.0.31
 access-list 1 permit any
+ip access-list extended GUEST-NET
+ permit ip 10.10.40.0 0.0.0.255 any
 !
 !
 !
@@ -102,11 +106,13 @@ line aux 0
 line vty 0 4
  access-class 10 in
  exec-timeout 5 0
+ logging synchronous
  login local
  transport input ssh
 line vty 5 15
  access-class 10 in
  exec-timeout 5 0
+ logging synchronous
  login local
  transport input ssh
 !

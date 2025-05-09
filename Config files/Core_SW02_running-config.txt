@@ -236,7 +236,7 @@ interface Vlan40
  mac-address 0060.5ca2.4604
  ip address 10.10.40.3 255.255.255.0
  ip helper-address 10.10.60.5
- ip access-group BLOCK-GUEST in
+ ip access-group BLOCK-GUEST-NET in
  standby 40 ip 10.10.40.1
  standby 40 preempt
 !
@@ -265,11 +265,11 @@ router ospf 1
  network 10.10.40.0 0.0.0.255 area 0
  network 10.10.60.0 0.0.0.255 area 0
  network 10.10.99.0 0.0.0.255 area 0
- network 10.10.0.0 0.0.255.255 area 0
 !
 ip classless
 ip route 10.10.0.0 255.255.0.0 10.10.0.2 
-ip route 10.10.0.0 255.255.0.0 10.10.0.3 
+ip route 10.10.0.0 255.255.0.0 10.10.0.3
+ip route 10.10.0.0 255.255.0.0 10.10.0.4 
 ip route 0.0.0.0 0.0.0.0 10.10.0.1 
 !
 ip flow-export destination 10.10.60.4 2055
@@ -278,14 +278,20 @@ ip flow-export version 9
 !
 ip access-list standard SSH-IT_ADMIN-ONLY
  permit 10.10.99.0 0.0.0.255
+ permit 10.10.10.0 0.0.0.255
  deny any
-access-list 10 permit 10.10.10.0 0.0.0.255
-ip access-list extended BLOCK-GUEST
- deny ip 10.10.40.0 0.0.0.255 10.10.0.0 0.0.0.255
- permit ip 10.10.40.0 0.0.0.255 any
 ip access-list standard BLOCK-NON-ADMIN
  deny 10.10.0.0 0.0.0.255
+ permit 10.10.99.0 0.0.0.255
  permit 10.10.10.0 0.0.0.255
+ip access-list extended BLOCK-GUEST-NET
+ deny ip 10.10.40.0 0.0.0.255 10.10.0.0 0.0.255.255
+ permit udp 10.10.40.0 0.0.0.255 any eq bootps
+ permit udp any eq bootps 10.10.40.0 0.0.0.255 eq bootpc
+ permit udp 10.10.40.0 0.0.0.255 any eq domain
+ permit tcp 10.10.40.0 0.0.0.255 any eq www
+ permit tcp 10.10.40.0 0.0.0.255 any eq 443
+ permit ip 10.10.40.0 0.0.0.255 any
 !
 banner login "!!! Authorised Users Only !!!"
 !
@@ -304,11 +310,13 @@ line aux 0
 line vty 0 4
  access-class SSH-IT_ADMIN-ONLY in
  exec-timeout 5 0
+ logging synchronous
  login local
  transport input ssh
 line vty 5 15
  access-class SSH-IT_ADMIN-ONLY in
  exec-timeout 5 0
+ logging synchronous
  login local
  transport input ssh
 !

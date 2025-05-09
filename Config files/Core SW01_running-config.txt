@@ -213,7 +213,6 @@ interface Vlan10
  description admin office
  mac-address 0001.640d.e901
  ip address 10.10.10.2 255.255.255.0
- ip helper-address 10.10.99.5
  ip helper-address 10.10.60.5
  standby 10 ip 10.10.10.1
  standby 10 priority 110
@@ -223,7 +222,6 @@ interface Vlan20
  description Sales Team
  mac-address 0001.640d.e902
  ip address 10.10.20.2 255.255.255.0
- ip helper-address 10.10.99.5
  ip helper-address 10.10.60.5
  standby 20 ip 10.10.20.1
  standby 20 priority 110
@@ -233,7 +231,6 @@ interface Vlan30
  description Finance Team
  mac-address 0001.640d.e903
  ip address 10.10.30.2 255.255.255.0
- ip helper-address 10.10.99.5
  ip helper-address 10.10.60.5
  standby 30 ip 10.10.30.1
  standby 30 priority 110
@@ -243,9 +240,8 @@ interface Vlan40
  description Guest
  mac-address 0001.640d.e904
  ip address 10.10.40.2 255.255.255.0
- ip helper-address 10.10.99.5
  ip helper-address 10.10.60.5
- ip access-group BLOCK-GUEST in
+ ip access-group BLOCK-GUEST-NET in
  standby 40 ip 10.10.40.1
  standby 40 priority 110
  standby 40 preempt
@@ -263,7 +259,6 @@ interface Vlan99
  description IT Management
  mac-address 0001.640d.e906
  ip address 10.10.99.2 255.255.255.224
- ip helper-address 10.10.99.5
  ip helper-address 10.10.60.5
  ip access-group block-non-admin in
  standby 99 ip 10.10.99.1
@@ -291,15 +286,20 @@ ip flow-export version 9
 !
 ip access-list standard SSH-IT_ADMIN-ONLY
  permit 10.10.99.0 0.0.0.255
+ permit 10.10.10.0 0.0.0.255
  deny any
-access-list 10 permit 10.10.10.0 0.0.0.255
-ip access-list extended BLOCK-GUEST
- deny ip 10.10.40.0 0.0.0.255 10.10.0.0 0.0.0.255
- permit ip 10.10.40.0 0.0.0.255 any
 ip access-list standard BLOCK-NON-ADMIN
  deny 10.10.0.0 0.0.0.255
  permit 10.10.99.0 0.0.0.255
  permit 10.10.10.0 0.0.0.255
+ip access-list extended BLOCK-GUEST-NET
+ deny ip 10.10.40.0 0.0.0.255 10.10.0.0 0.0.255.255
+ permit udp 10.10.40.0 0.0.0.255 any eq bootps
+ permit udp any eq bootps 10.10.40.0 0.0.0.255 eq bootpc
+ permit udp 10.10.40.0 0.0.0.255 any eq domain
+ permit tcp 10.10.40.0 0.0.0.255 any eq www
+ permit tcp 10.10.40.0 0.0.0.255 any eq 443
+ permit ip 10.10.40.0 0.0.0.255 any
 !
 banner login "!!! Authorised Users Only !!!"
 !
@@ -318,11 +318,13 @@ line aux 0
 line vty 0 4
  access-class SSH-IT_ADMIN-ONLY in
  exec-timeout 5 0
+ logging synchronous
  login local
  transport input ssh
 line vty 5 15
  access-class SSH-IT_ADMIN-ONLY in
  exec-timeout 5 0
+ logging synchronous
  login local
  transport input ssh
 !
