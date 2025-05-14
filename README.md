@@ -57,6 +57,7 @@ All the configuration files for the network devices are included in the reposito
 
 ### Prerequisites:
 - Install **Cisco Packet Tracer** for network simulation.
+- load the Project Master file.pkt
 - load the network device with the config files
 
 ### Setup Instructions:
